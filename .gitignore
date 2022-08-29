@@ -1,0 +1,8 @@
+*.x
+*.exe
+.idea
+build
+cmake-build-debug
+cmake-build-release
+html/
+latex/
