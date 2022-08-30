@@ -15,7 +15,7 @@
 
 class Matrix {
 public:
-    Matrix(int gridRes, Mesh &mesh, Plasma &plasma, int nTor, double omega, plasmaType pType);
+    Matrix(int gridRes, Mesh &mesh, Plasma &plasma, int nTor, double omega);
 
     /**
      * Element extraction routine.
@@ -47,7 +47,6 @@ private:
     const int m_NDOF;
     const double m_omega;
     const int m_nTor;
-    const plasmaType m_pType;
 
     Eigen::MatrixXcd *globalMatrix;
     Eigen::VectorXcd *rhs;

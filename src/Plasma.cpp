@@ -5,7 +5,7 @@
 #include "Plasma.h"
 #include "physicsConstants.h"
 
-Plasma::Plasma(Mesh &mesh, double nTor, double omega) {
+Plasma::Plasma(Mesh &mesh, int nTor, double omega) {
     m_mesh = &mesh;
     m_NSpecies = 0;
     m_nTor = nTor;
@@ -32,8 +32,8 @@ std::complex<double> Plasma::getCurrentMatrix(double R, int row, int col, int no
     }
 }
 
-void Plasma::addSpecies(double mass, double charge, double fraction, double omega) {
-    Species spec(mass, charge, fraction, omega);
+void Plasma::addSpecies(double mass, double charge, double fraction, double omega, double peakTemp, plasmaType pType) {
+    Species spec(mass, charge, fraction, m_nTor, omega, peakTemp, pType);
     specList.push_back(spec);
     m_NSpecies++;
 }

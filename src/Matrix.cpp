@@ -7,9 +7,10 @@
 #include "physicsConstants.h"
 #include "Writers.h"
 #include <boost/math/quadrature/gauss.hpp>
+#include "omp.h"
 
-Matrix::Matrix(int gridRes, Mesh &mesh, Plasma &plasma, int nTor, double omega, plasmaType pType) : m_gridRes(gridRes), m_NDOF(4 * gridRes),
-                                                                    m_nTor(nTor), m_omega(omega), m_pType(pType) {
+Matrix::Matrix(int gridRes, Mesh &mesh, Plasma &plasma, int nTor, double omega) : m_gridRes(gridRes), m_NDOF(4 * gridRes),
+                                                                    m_nTor(nTor), m_omega(omega){
     globalMatrix = new Eigen::MatrixXcd(m_NDOF,m_NDOF);
     rhs = new Eigen::VectorXcd(m_NDOF);
     solution = new Eigen::VectorXcd(m_NDOF);
@@ -31,15 +32,22 @@ int Matrix::global2Comp(int i) {
 }
 
 void Matrix::buildMatrix() {
-    //todo: use OMP to multi-thread?
-    for (int i = 0; i < m_NDOF; ++i) {
-        for (int j = 0; j < m_NDOF; ++j) {
-            (*globalMatrix)(i, j) = getEntry(i, j);
+    double startTime = omp_get_wtime();
+#pragma omp parallel
+    {
+#pragma omp for collapse(2)
+        for (int i = 0; i < m_NDOF; ++i) {
+            for (int j = 0; j < m_NDOF; ++j) {
+                (*globalMatrix)(i, j) = getEntry(i, j);
+            }
+        }
+#pragma omp for
+        for (int i = 0; i < m_NDOF; ++i) {
+            (*rhs)(i) = getRhs(i);
         }
     }
-    for (int i = 0; i < m_NDOF; ++i) {
-        (*rhs)(i) = getRhs(i);
-    }
+    double endTime = omp_get_wtime();
+    std::cout << "Matrix build completed, time used: " << endTime - startTime << std::endl;
 }
 
 void Matrix::solve() {
@@ -81,23 +89,25 @@ Matrix::~Matrix(){
 }
 
 std::complex<double> Matrix::getEntryPlasma(int rowIndex, int colIndex){
-    if (m_pType == vacuum){
-        return {0};
-    }
-    //else:
-
     int iNode = global2Node(rowIndex);
     int jNode = global2Node(colIndex);
     int iComp = global2Comp(rowIndex);
     int jComp = global2Comp(colIndex);
 
     // boundary check
-    if (iNode == 0 || jNode == 0 || iNode == m_gridRes-1 || jNode == m_gridRes -1){
-        // if on boundary, zero contribution to Pot, Aphi, Az. But not that of Ar.
-        if (iComp != 1){
+    if (iNode == 0 || iNode == m_gridRes - 1) {
+        // on the boundary, so for rows associated with Pot, Aphi or AZ, return 0. This is because those will be overruled by essential BCs.
+        if (iComp != 1) {
             return {0};
         }
     }
+    // in any case, there is never any dependency on Pot, Aphi, AZ that lie on the boundary, as they are 0. So also zero out columns related to those.
+    if (jNode == 0 || jNode == m_gridRes - 1) {
+        if (jComp != 1) {
+            return {0};
+        }
+    }
+
 
     std::complex<double> returnVal{0};
     auto func = [iNode, jNode, iComp, jComp, this](double R) {
@@ -111,15 +121,6 @@ std::complex<double> Matrix::getEntryPlasma(int rowIndex, int colIndex){
                    m_plasma->getCurrentMatrix(R, iComp - 1, jComp, jNode);
         }
     };
-
-    /*if (m_pType == cold){
-        return {0};
-    }else if (m_pType == warm){
-        return {0}; //todo
-    }else{
-        //hot plasma, todo
-        return {0};
-    }*/
 
     std::vector<int> elemIndicesI{};
     m_mesh->getElemList(iNode,elemIndicesI);

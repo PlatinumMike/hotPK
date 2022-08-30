@@ -33,6 +33,16 @@ add_executable("${PROJECT_NAME}.x" src/main.cpp src/Mesh.cpp src/Mesh.h src/Matr
 
 target_compile_definitions("${PROJECT_NAME}.x" PRIVATE "-DGIT_COMMIT_HASH=\"${GIT_COMMIT_HASH}\"")
 
+find_package(OpenMP)
+if(OpenMP_CXX_FOUND)
+    target_link_libraries("${PROJECT_NAME}.x" PUBLIC OpenMP::OpenMP_CXX)
+else()
+    message("OpenMP not found, continuing without it...")
+endif()
+
+find_package(GSL REQUIRED)
+target_link_libraries("${PROJECT_NAME}.x" PUBLIC GSL::gsl)
+
 message("Build type       : " ${CMAKE_BUILD_TYPE}) #Prints Debug or Release, so it's clear if the code has actually been compiled with/without optimizations
 message("Eigen dir        : " ${EIGEN3_INCLUDE_DIR}) #there actually is a more modern way using find_package but that did not work for me
 message("Boost dir        : " ${BOOST_INCLUDE_DIR})
