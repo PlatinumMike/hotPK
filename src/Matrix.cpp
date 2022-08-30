@@ -5,19 +5,20 @@
 #include "Matrix.h"
 #include <iostream>
 #include "physicsConstants.h"
+#include "Writers.h"
+#include <boost/math/quadrature/gauss.hpp>
 
-constexpr double pi = 3.141592653589793;
-
-Matrix::Matrix(int gridRes, Mesh &mesh, int nTor, double antFreq) : m_gridRes(gridRes), m_NDOF(4 * gridRes),
-                                                                    m_nTor(nTor), m_omega(2 * pi * antFreq) {
+Matrix::Matrix(int gridRes, Mesh &mesh, Plasma &plasma, int nTor, double omega, plasmaType pType) : m_gridRes(gridRes), m_NDOF(4 * gridRes),
+                                                                    m_nTor(nTor), m_omega(omega), m_pType(pType) {
     globalMatrix = new Eigen::MatrixXcd(m_NDOF,m_NDOF);
     rhs = new Eigen::VectorXcd(m_NDOF);
     solution = new Eigen::VectorXcd(m_NDOF);
     m_mesh = &mesh;
+    m_plasma = &plasma;
 }
 
 std::complex<double> Matrix::getEntry(int rowIndex, int colIndex) {
-    return {1};
+    return getEntryVacuum(rowIndex, colIndex) + getEntryPlasma(rowIndex, colIndex);
 }
 
 int Matrix::global2Node(int i) {
@@ -72,9 +73,70 @@ std::complex<double> Matrix::getRhs(int rowIndex) {
         return -physConstants::mu_0 * JantZ * m_mesh->tent(Rant, node);
     }
 }
+
 Matrix::~Matrix(){
     delete globalMatrix;
     delete rhs;
     delete solution;
-    delete m_mesh;
+}
+
+std::complex<double> Matrix::getEntryPlasma(int rowIndex, int colIndex){
+    if (m_pType == vacuum){
+        return {0};
+    }
+    //else:
+
+    int iNode = global2Node(rowIndex);
+    int jNode = global2Node(colIndex);
+    int iComp = global2Comp(rowIndex);
+    int jComp = global2Comp(colIndex);
+
+    // boundary check
+    if (iNode == 0 || jNode == 0 || iNode == m_gridRes-1 || jNode == m_gridRes -1){
+        // if on boundary, zero contribution to Pot, Aphi, Az. But not that of Ar.
+        if (iComp != 1){
+            return {0};
+        }
+    }
+
+    std::complex<double> returnVal{0};
+    auto func = [iNode, jNode, iComp, jComp, this](double R) {
+        if (iComp == 0) {
+            return physConstants::mu_0 * R * std::complex<double>{0, 1} * physConstants::speedOfLight / m_omega *
+                   (m_mesh->tentDerivative(R, iNode) * m_plasma->getCurrentMatrix(R, 0, jComp, jNode) -
+                    std::complex<double>{0, m_nTor / R} * m_mesh->tent(R, iNode) *
+                    m_plasma->getCurrentMatrix(R, 1, jComp, jNode));
+        } else {
+            return physConstants::mu_0 * R * m_mesh->tent(R, iNode) *
+                   m_plasma->getCurrentMatrix(R, iComp - 1, jComp, jNode);
+        }
+    };
+
+    /*if (m_pType == cold){
+        return {0};
+    }else if (m_pType == warm){
+        return {0}; //todo
+    }else{
+        //hot plasma, todo
+        return {0};
+    }*/
+
+    std::vector<int> elemIndicesI{};
+    m_mesh->getElemList(iNode,elemIndicesI);
+
+    for(int const &elemI : elemIndicesI){
+        double Rleft = m_mesh->getElemLeftPoint(elemI);
+        double Rright = m_mesh->getElemRightPoint(elemI);
+        //5-point Gauss-Legendre quadrature
+        returnVal += boost::math::quadrature::gauss<double,5>::integrate(func,Rleft,Rright);
+    }
+    return returnVal;
+}
+
+std::complex<double> Matrix::getEntryVacuum(int rowIndex, int colIndex) {
+    return {0}; //todo: placeholder. Should return the vacuum contribution.
+}
+
+void Matrix::saveMatrix(std::string fileName, bool isReal) {
+    Writers::writeCsv2(fileName,*globalMatrix, isReal);
 }

@@ -5,15 +5,30 @@
 #include "Engine.h"
 #include "Matrix.h"
 #include <iostream>
+#include "physicsConstants.h"
 
-Engine::Engine(){
-    mesh_ptr = new Mesh(30,2.3,4.0,3.9);
-    matrix_ptr = new Matrix(30,*mesh_ptr,27,40e6);
+constexpr double pi = 3.141592653589793;
+
+Engine::Engine() {
+    constexpr double antennaFreq = 40e6;
+    double omega = 2 * pi * antennaFreq;
+    int nTor = 27;
+    double RWest = 2.3;
+    double REast = 4.0;
+    double RAnt = 3.9;
+    int resolution = 300;
+    mesh_ptr = new Mesh(resolution, RWest, REast, RAnt);
+    plasma_ptr = new Plasma(*mesh_ptr, nTor, omega);
+    plasma_ptr->addSpecies(physConstants::massElectron, -physConstants::elementaryCharge, 1.0, omega);
+    plasma_ptr->addSpecies(physConstants::massProton, physConstants::elementaryCharge, 1.0e-2, omega);
+    plasma_ptr->addSpecies(physConstants::massProton * 3, physConstants::elementaryCharge * 2, 0.495, omega);
+    matrix_ptr = new Matrix(resolution, *mesh_ptr, *plasma_ptr, nTor, omega, cold);
 }
 
 void Engine::run() {
-    //todo: for now some random indices
-    std::cout<< matrix_ptr->getEntry(10,4) << std::endl;
     matrix_ptr->buildMatrix();
+    std::cout<<"Matrix is now built"<<std::endl;
+    matrix_ptr->saveMatrix("matRe.csv", true);
+    matrix_ptr->saveMatrix("matIm.csv", false);
     //matrix_ptr->solve();
 }

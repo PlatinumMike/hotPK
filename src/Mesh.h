@@ -25,6 +25,11 @@ public:
 
     double getRAnt();
 
+    void getElemList(int nodeIndex, std::vector<int> &elemIndices);
+
+    [[nodiscard]] double getElemLeftPoint(int elemIndex) const;
+    [[nodiscard]] double getElemRightPoint(int elemIndex) const;
+
 private:
     const int m_res; // number of nodes
     const int m_elem; //number of elements
@@ -39,6 +44,13 @@ private:
     [[nodiscard]] double getNodePosition(int iGrid) const;
     [[nodiscard]] double getElemMidPoint(int elemIndex) const;
     [[nodiscard]] double getElemWidth(int elemIndex) const;
+    /**
+     * get global node index from index local to the element
+     * @param elemIndex index of the element
+     * @param localNodeIndex left (0) or right (1)
+     * @return global node
+     */
+    [[nodiscard]] int localNode2Global(int elemIndex, int localNodeIndex) const;
 
 };
 

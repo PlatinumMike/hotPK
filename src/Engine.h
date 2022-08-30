@@ -7,6 +7,7 @@
 
 #include "Matrix.h"
 #include "Mesh.h"
+#include "Plasma.h"
 
 class Engine {
 public:
@@ -15,6 +16,7 @@ public:
 
 private:
     Mesh *mesh_ptr;
+    Plasma *plasma_ptr;
     Matrix *matrix_ptr;
 
 };

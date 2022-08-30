@@ -60,3 +60,26 @@ double Mesh::tentDerivative(double R, int nodeIndex) {
 double Mesh::getRAnt() {
     return m_RAnt;
 }
+
+void Mesh::getElemList(int nodeIndex, std::vector<int> &elemIndices) {
+    if(nodeIndex==0){
+        elemIndices.push_back(0);
+    }else if (nodeIndex==m_res-1){
+        elemIndices.push_back(m_elem-1);
+    }else{
+        elemIndices.push_back(nodeIndex-1);
+        elemIndices.push_back(nodeIndex);
+    }
+}
+
+double Mesh::getElemLeftPoint(int elemIndex) const {
+    return m_nodePositions[localNode2Global(elemIndex,0)];
+}
+
+double Mesh::getElemRightPoint(int elemIndex) const {
+    return m_nodePositions[localNode2Global(elemIndex,1)];
+}
+
+int Mesh::localNode2Global(int elemIndex, int localNodeIndex) const {
+    return elemIndex + localNodeIndex; //assuming the mesh is ordered.
+}
