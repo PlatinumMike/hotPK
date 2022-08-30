@@ -5,7 +5,8 @@ This code implements a simple finite element model, in 1D, in an annulus geometr
 The required integrals are evaluated, and a routine is provided to rapidly compute matrix entries.
 
 # Installation
-You need a C++ compiler, `cmake` and `make`.
+You need a C++ compiler, `cmake`, `make` and the Eigen3 libary. For cmake to be able to find Eigen, define `EIGEN3_INCLUDE_DIR` to be equal to the path in which eigen is installed.
+E.g. `export EIGEN3_INCLUDE_DIR=$HOME/Downloads/eigen/`.
 
 Then compile:
 

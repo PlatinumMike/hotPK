@@ -6,6 +6,7 @@
 #define HOTPLASMAKERNEL_ENGINE_H
 
 #include "Matrix.h"
+#include "Mesh.h"
 
 class Engine {
 public:
@@ -13,6 +14,7 @@ public:
     void run();
 
 private:
+    Mesh *mesh_ptr;
     Matrix *matrix_ptr;
 
 };

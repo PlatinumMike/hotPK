@@ -6,11 +6,14 @@
 #define HOTPLASMAKERNEL_MATRIX_H
 
 #include <complex>
+#include <Eigen/Dense>
+#include "Mesh.h"
 
 
 class Matrix {
 public:
-    Matrix(int gridRes);
+    Matrix(int gridRes, Mesh &mesh, int nTor, double antFreq);
+
     /**
      * Element extraction routine
      * @param rowIndex row index
@@ -19,9 +22,27 @@ public:
      */
     std::complex<double> getEntry(int rowIndex, int colIndex);
 
+    std::complex<double> getRhs(int rowIndex);
+
+    /**
+     * fills matrix and rhs
+     */
+    void buildMatrix();
+
+    void solve();
+
 private:
     const int m_gridRes;
     const int m_NDOF;
+    const double m_omega;
+    const int m_nTor;
+
+    Eigen::MatrixXcd *globalMatrix;
+    Eigen::VectorXcd *rhs;
+    Eigen::VectorXcd *solution;
+
+    Mesh *m_mesh;
+
     /**
      * converts global index to index on the mesh.
      * Using block ordering, so sorting by component first, then by node index.
@@ -35,6 +56,8 @@ private:
      * @return corresponding component index
      */
     int global2Comp(int i);
+
+    ~Matrix();
 
 };
 
