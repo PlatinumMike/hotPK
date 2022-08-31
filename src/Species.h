@@ -24,7 +24,7 @@ public:
     [[nodiscard]] std::complex<double> getConductivity(double R, int row, int col) const;
 
 private:
-    const double B0Axis = 3; //todo: magic constants, fix
+    const double B0Axis = 2.623778994743588; //todo: magic constants, fix
     const double RAxis = 3;
     const double m_mass;
     const double m_charge;

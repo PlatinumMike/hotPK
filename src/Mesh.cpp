@@ -83,3 +83,11 @@ double Mesh::getElemRightPoint(int elemIndex) const {
 int Mesh::localNode2Global(int elemIndex, int localNodeIndex) const {
     return elemIndex + localNodeIndex; //assuming the mesh is ordered.
 }
+
+bool Mesh::isOnBoundary(int nodeIndex) const {
+    return (nodeIndex == 0 || nodeIndex == m_res - 1);
+}
+
+int Mesh::getElemCount() {
+    return m_elem;
+}

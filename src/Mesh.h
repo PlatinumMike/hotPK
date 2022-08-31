@@ -27,8 +27,15 @@ public:
 
     void getElemList(int nodeIndex, std::vector<int> &elemIndices);
 
+    [[nodiscard]] double getNodePosition(int iGrid) const;
     [[nodiscard]] double getElemLeftPoint(int elemIndex) const;
     [[nodiscard]] double getElemRightPoint(int elemIndex) const;
+    [[nodiscard]] double getElemMidPoint(int elemIndex) const;
+    [[nodiscard]] double getElemWidth(int elemIndex) const;
+
+    [[nodiscard]] bool isOnBoundary(int nodeIndex) const;
+
+    int getElemCount();
 
 private:
     const int m_res; // number of nodes
@@ -41,9 +48,6 @@ private:
     std::vector<double> m_elementMids; //positions of all the element mid points
     std::vector<double> m_elementWidths; //positions of all the widths of the elements
 
-    [[nodiscard]] double getNodePosition(int iGrid) const;
-    [[nodiscard]] double getElemMidPoint(int elemIndex) const;
-    [[nodiscard]] double getElemWidth(int elemIndex) const;
     /**
      * get global node index from index local to the element
      * @param elemIndex index of the element

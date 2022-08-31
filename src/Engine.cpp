@@ -41,9 +41,14 @@ Engine::Engine() {
 
 void Engine::run() {
     matrix_ptr->buildMatrix();
+
+    double startTime = omp_get_wtime();
     std::cout<<"Writing data to disk now"<<std::endl;
     matrix_ptr->saveMatrix("matRe.csv", true);
     matrix_ptr->saveMatrix("matIm.csv", false);
-    //matrix_ptr->solve();
-    std::cout<<"Finished"<<std::endl;
+    double endTime = omp_get_wtime();
+    std::cout<<"Finished writing, time used: "<< endTime - startTime << std::endl;
+
+    matrix_ptr->solve();
+    matrix_ptr->saveSolution("sol.csv");
 }
