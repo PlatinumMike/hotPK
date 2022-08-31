@@ -9,7 +9,6 @@ Mesh::Mesh(const int resolution, const double RWest, const double REast, const d
                                                                                               m_REast(REast),
                                                                                               m_RAnt(RAnt),
                                                                                               m_elem(resolution - 1) {
-    //todo: generate mesh, and add functions to convert indices local2global and so on.
     m_nodePositions.resize(m_res);
     m_elementMids.resize(m_elem);
     m_elementWidths.resize(m_elem);

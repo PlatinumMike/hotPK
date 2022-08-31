@@ -29,7 +29,7 @@ execute_process(
         OUTPUT_VARIABLE GIT_COMMIT_HASH
         OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-add_executable("${PROJECT_NAME}.x" src/main.cpp src/Mesh.cpp src/Mesh.h src/Matrix.cpp src/Matrix.h src/Plasma.cpp src/Plasma.h src/Engine.cpp src/Engine.h src/Writers.cpp src/Writers.h src/Species.cpp src/Species.h src/ElementIntegrals.cpp src/ElementIntegrals.h)
+add_executable("${PROJECT_NAME}.x" src/main.cpp src/Mesh.cpp src/Mesh.h src/Matrix.cpp src/Matrix.h src/Plasma.cpp src/Plasma.h src/Engine.cpp src/Engine.h src/Writers.cpp src/Writers.h src/Species.cpp src/Species.h src/ElementIntegrals.cpp src/ElementIntegrals.h src/HFunctions.cpp src/HFunctions.h)
 
 target_compile_definitions("${PROJECT_NAME}.x" PRIVATE "-DGIT_COMMIT_HASH=\"${GIT_COMMIT_HASH}\"")
 
