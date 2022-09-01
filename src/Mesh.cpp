@@ -3,6 +3,9 @@
 //
 
 #include "Mesh.h"
+#include <cmath>
+
+constexpr double pi = 3.141592653589793;
 
 Mesh::Mesh(const int resolution, const double RWest, const double REast, const double RAnt) : m_res(resolution),
                                                                                               m_RWest(RWest),
@@ -89,4 +92,73 @@ bool Mesh::isOnBoundary(int nodeIndex) const {
 
 int Mesh::getElemCount() {
     return m_elem;
+}
+
+int Mesh::selectSector(double R, int elem) {
+    double Rleft = getElemLeftPoint(elem);
+    double Rright = getElemRightPoint(elem);
+    if (R <= Rleft) {
+        return 1; //left
+    } else if (R < Rright) {
+        return 2; //middle
+    } else {
+        return 3; //right
+    }
+}
+
+double Mesh::getSValue(double R, int elem, double angle, int index) {
+    double Rleft = getElemLeftPoint(elem);
+    double Rright = getElemRightPoint(elem);
+    if (index == 0) {
+        //s1 (or s3)
+        if (R <= Rleft) {
+            return (R - Rleft) / std::cos(angle);
+        } else if (R < Rright) {
+            return 0;
+        } else {
+            return (R - Rright) / std::cos(angle);
+        }
+    } else {
+        //s2 (or s4)
+        if (R <= Rleft) {
+            return (R - Rright) / std::cos(angle);
+        } else if (R < Rright) {
+            if (angle < 0.5 * pi) {
+                return (R - Rleft) / std::cos(angle);
+            } else {
+                return (R - Rright) / std::cos(angle);
+            }
+        } else {
+            return (R - Rleft) / std::cos(angle);
+        }
+    }
+}
+
+bool Mesh::isLeft(int nodeIndex, int elemIndex) {
+    if (nodeIndex == elemIndex + 1){
+        return true;
+    }else if (nodeIndex == elemIndex){
+        return false;
+    }else{
+        return false; //todo: placeholder, this should actually throw an error because the check failed, element contains no part of basis at nodeIndex.
+    }
+}
+
+double Mesh::getScaling(double R, int elem, int nodeIndex, double angle, int power) {
+    double Rleft = getElemLeftPoint(elem);
+    double Rright = getElemRightPoint(elem);
+    double Rj = getNodePosition(nodeIndex);
+    if (isLeft(nodeIndex, elem)) {
+        if (power == 1) {
+            return (R - Rleft) / (Rj - Rleft);
+        } else {
+            return -std::cos(angle) / (Rj - Rleft);
+        }
+    } else {
+        if (power == 1) {
+            return (Rright - R) / (Rright - Rj);
+        } else {
+            return std::cos(angle) / (Rright - Rj);
+        }
+    }
 }

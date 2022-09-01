@@ -10,7 +10,7 @@
 
 class Plasma {
 public:
-    Plasma(Mesh &mesh, int nTor, double omega);
+    Plasma(Mesh &mesh, int nTor, double omega, plasmaType pType);
     /**
      * Gets 3x4 matrix that relates current to the 4 potentials.
      * Plasma response due to the basis function with index nodeIndex.
@@ -23,6 +23,18 @@ public:
      */
     std::complex<double> getCurrentMatrix(double R, int row, int col, int nodeIndex);
 
+    /**
+     * Computes contribution of one species to current density matrix
+     * The hot version is non-local, so requires species treatment.
+     * @param R major radius
+     * @param row row index
+     * @param col column index
+     * @param nodeIndex index of the mesh node
+     * @param mesh mesh needed to evaluate the integrals
+     * @return entry in 3x4 block matrix
+     */
+    std::complex<double> getCurrentMatrixHot(double R, int row, int col, int nodeIndex);
+
     void addSpecies(double mass, double charge, double fraction, double omega, double peakTemp, plasmaType pType);
 
 private:
@@ -31,6 +43,7 @@ private:
     std::vector<Species> specList{};
     int m_nTor;
     double m_omega;
+    plasmaType m_pType;
 
 
 

@@ -25,6 +25,11 @@ public:
 
     double getRAnt();
 
+    /**
+     * Retrieve list of element indices belonging to a given node.
+     * @param nodeIndex index of the node
+     * @param elemIndices vector of ints, will be filled
+     */
     void getElemList(int nodeIndex, std::vector<int> &elemIndices);
 
     [[nodiscard]] double getNodePosition(int iGrid) const;
@@ -36,6 +41,18 @@ public:
     [[nodiscard]] bool isOnBoundary(int nodeIndex) const;
 
     int getElemCount();
+
+    /**
+     * Get "sector", so check if sample point R is left, inside, or right of given element.
+     * @param R position R
+     * @param elem element index
+     * @return sector
+     */
+    int selectSector(double R, int elem);
+
+    double getSValue(double R, int elem, double angle, int index);
+
+    double getScaling(double R, int elem, int nodeIndex, double angle, int power);
 
 private:
     const int m_res; // number of nodes
@@ -55,6 +72,15 @@ private:
      * @return global node
      */
     [[nodiscard]] int localNode2Global(int elemIndex, int localNodeIndex) const;
+
+    /**
+     * check if the selected element contains the left side of the basis function at node nodeIndex, or the right side
+     * @param nodeIndex
+     * @param elemIndex
+     * @return true if the left side (so the rising part) is in the element.
+     * @warning it assumes the left or right part is the element, so no check to see if it is fully outside the element.
+     */
+    bool isLeft(int nodeIndex, int elemIndex);
 
 };
 

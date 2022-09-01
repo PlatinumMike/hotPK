@@ -18,9 +18,8 @@ Engine::Engine() {
     double REast = 4.0;
     double RAnt = 3.9;
     int resolution = 300;
-    plasmaType pType = warm;
+    plasmaType pType = hot;
     double peakTemp = 4.0e3*physConstants::elementaryCharge;
-
 
     std::cout<< "Git commit hash: "<<GIT_COMMIT_HASH<<std::endl;
 #pragma omp parallel default(none)
@@ -32,7 +31,7 @@ Engine::Engine() {
     }
 
     mesh_ptr = new Mesh(resolution, RWest, REast, RAnt);
-    plasma_ptr = new Plasma(*mesh_ptr, nTor, omega);
+    plasma_ptr = new Plasma(*mesh_ptr, nTor, omega, pType);
     plasma_ptr->addSpecies(physConstants::massElectron, -physConstants::elementaryCharge, 1.0, omega, peakTemp, pType);
     plasma_ptr->addSpecies(physConstants::massProton, physConstants::elementaryCharge, 1.0e-2, omega, peakTemp, pType);
     plasma_ptr->addSpecies(physConstants::massProton * 3, physConstants::elementaryCharge * 2, 0.495, omega, peakTemp, pType);

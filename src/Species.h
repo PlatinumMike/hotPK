@@ -6,6 +6,8 @@
 #define HOTPLASMAKERNEL_SPECIES_H
 
 #include <complex>
+#include <map>
+
 enum plasmaType {vacuum, cold, warm, hot};
 
 
@@ -23,6 +25,19 @@ public:
      */
     [[nodiscard]] std::complex<double> getConductivity(double R, int row, int col) const;
 
+    /**
+     * Computes integral of kernel, times s^power. Already integrated over parallel direction
+     * @param R major radius
+     * @param row row index
+     * @param col column index
+     * @param s1 lower integration bound s
+     * @param s2 upper integration bound s
+     * @param angle angle
+     * @param power power of s in integrand (1 or 2)
+     * @return integral
+     */
+    std::complex<double> getKernel(double R, int row, int col, double s1, double s2, double angle, int power) const;
+
 private:
     const double B0Axis = 2.623778994743588; //todo: magic constants, fix
     const double RAxis = 3;
@@ -35,6 +50,12 @@ private:
     const plasmaType m_pType;
     const double m_peakTemp;
     double tempOffset;
+
+    //helper maps for looping up indices
+    std::map<std::string,int> HDict;
+    std::map<std::string,int> SDict;
+    std::map<std::string,std::complex<double>> coefDict;
+    std::complex<double> getCoef(const std::string& label,double R) const;
 
     //dielectric tensor elements
     double getSCold(double R) const;
@@ -60,6 +81,14 @@ private:
     std::complex<double> plasmaDispersionFunction(double x) const;
 
     std::complex<double> plasmaDispersionFunctionDeriv(double x) const;
+
+    double thermalLarmorRadius(double R) const;
+
+    double getPerpIntegral(double xi1, double xi2, int indexH, int harmonic, double rhoT, int power) const;
+
+    std::complex<double> getSIntegral(double R, int index, int harmonic, double kpar) const;
+
+    std::complex<double> getElement(const std::string& label, double R, double s1, double s2, double kpar, int power) const;
 
 };
 
