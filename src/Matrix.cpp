@@ -12,6 +12,7 @@
 
 Matrix::Matrix(int gridRes, Mesh &mesh, Plasma &plasma, int nTor, double omega) : m_gridRes(gridRes), m_NDOF(4 * gridRes),
         m_nTor(nTor), m_omega(omega), m_omegaOverC2(omega*omega/(physConstants::speedOfLight*physConstants::speedOfLight)){
+    std::cout<< "Number of degrees of freedom = "<< m_NDOF <<std::endl;
     globalMatrix = new Eigen::MatrixXcd(m_NDOF,m_NDOF);
     rhs = new Eigen::VectorXcd(m_NDOF);
     solution = new Eigen::VectorXcd(m_NDOF);

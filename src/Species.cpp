@@ -184,50 +184,56 @@ std::complex<double> Species::getKernel(double R, int row, int col, double s1, d
     std::complex<double> ans{0};
     double kpar = m_nTor/R;
 
-    //todo: any way to do this more efficiently/cleanly? Not all elements are needed.
-    std::complex<double> D3 = getElement("D3", R, s1, s2, kpar, power);
-    std::complex<double> D4 = getElement("D4", R, s1, s2, kpar, power);
-    std::complex<double> D5 = getElement("D5", R, s1, s2, kpar, power);
-    std::complex<double> R0 = getElement("R0", R, s1, s2, kpar, power);
-    std::complex<double> R0mod = getElement("R0mod", R, s1, s2, kpar, power);
-    std::complex<double> R1 = getElement("R1", R, s1, s2, kpar, power);
-    std::complex<double> R2 = getElement("R2", R, s1, s2, kpar, power);
-    std::complex<double> R3 = getElement("R3", R, s1, s2, kpar, power);
-    std::complex<double> R4 = getElement("R4", R, s1, s2, kpar, power);
-    std::complex<double> R5 = getElement("R5", R, s1, s2, kpar, power);
-
     if (row == 0) {
+        //JR
         if (col == 0) {
-            ans = -D4 * std::cos(angle) - D5 * std::sin(angle);
+            //due to Pot
+            ans = -getElement("D4", R, s1, s2, kpar, power) * std::sin(angle) +
+                  getElement("D5", R, s1, s2, kpar, power) * std::cos(angle);
         } else if (col == 1) {
-            ans = R1 + 0.5 * (R0 - R0mod * std::cos(2 * angle));
+            //due to AR
+            ans = getElement("R1", R, s1, s2, kpar, power)
+            +0.5 * (getElement("R0", R, s1, s2, kpar, power) +
+                    getElement("R0mod", R, s1, s2, kpar, power) * std::cos(2 * angle));
         } else if (col == 2) {
-            ans = R2 - 0.5 * R0mod * std::sin(2 * angle);
+            //due to Aphi
+            ans = getElement("R4", R, s1, s2, kpar, power) * std::sin(angle) -
+                  getElement("R5", R, s1, s2, kpar, power) * std::cos(angle);
         } else {
-            ans = R4 * std::cos(angle) + R5 * std::sin(angle);
+            //due to AZ
+            ans = -getElement("R2", R, s1, s2, kpar, power)
+            -0.5 * getElement("R0mod", R, s1, s2, kpar, power) * std::sin(2 * angle);
         }
     } else if (row == 1) {
+        //Jphi
         if (col == 0) {
-            ans = -D4 * std::sin(angle) + D5 * std::cos(angle);
+            ans = -getElement("D3", R, s1, s2, kpar, power);
         } else if (col == 1) {
-            ans = -R2 - 0.5 * R0mod * std::sin(2 * angle);
+            ans = getElement("R4", R, s1, s2, kpar, power) * std::sin(angle) +
+                  getElement("R5", R, s1, s2, kpar, power) * std::cos(angle);
         } else if (col == 2) {
-            ans = R1 + 0.5 * (R0 + R0mod * std::cos(2 * angle));
+            ans = getElement("R3", R, s1, s2, kpar, power);
         } else {
-            ans = R4 * std::sin(angle) - R5 * std::cos(angle);
+            ans = getElement("R4", R, s1, s2, kpar, power) * std::cos(angle) -
+                  getElement("R5", R, s1, s2, kpar, power) * std::sin(angle);
         }
     } else {
+        //JZ
         if (col == 0) {
-            ans = -D3;
+            ans = -getElement("D4", R, s1, s2, kpar, power) * std::cos(angle) -
+                  getElement("D5", R, s1, s2, kpar, power) * std::sin(angle);
         } else if (col == 1) {
-            ans = R4 * std::cos(angle) - R5 * std::sin(angle);
+            ans = getElement("R2", R, s1, s2, kpar, power)
+            -0.5 * getElement("R0mod", R, s1, s2, kpar, power) * std::sin(2 * angle);
         } else if (col == 2) {
-            ans = R4 * std::sin(angle) + R5 * std::cos(angle);
+            ans = getElement("R4", R, s1, s2, kpar, power) * std::cos(angle) +
+                  getElement("R5", R, s1, s2, kpar, power) * std::sin(angle);
         } else {
-            ans = R3;
+            ans = getElement("R1", R, s1, s2, kpar, power)
+            +0.5 * (getElement("R0", R, s1, s2, kpar, power) -
+                    getElement("R0mod", R, s1, s2, kpar, power) * std::cos(2 * angle));
         }
     }
-
 
     return 4.0 * pi * physConstants::eps_0 * omega * getPlasmaFreq2(R) * cyc * cyc / (vT * vT * vT) * ans;
 }

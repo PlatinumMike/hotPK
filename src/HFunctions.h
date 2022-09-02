@@ -171,6 +171,9 @@ private:
                                                    0, 0, 0, 0,
                                                    0, 0, 0, 0};
 
+    //useful for x^n with integer n. std::pow is rather slow.
+    //todo: still rather slow, profiling shows that most time is spent in U,V,PDF. So best to cache those values and linearly interpolate.
+    static double powBySquaring(double x, int n);
 };
 
 
