@@ -4,6 +4,7 @@
 
 #include "Mesh.h"
 #include <cmath>
+#include "Writers.h"
 
 constexpr double pi = 3.141592653589793;
 
@@ -161,4 +162,8 @@ double Mesh::getScaling(double R, int elem, int nodeIndex, double angle, int pow
             return std::cos(angle) / (Rright - Rj);
         }
     }
+}
+
+void Mesh::saveNodes() {
+    Writers::writeCsv("nodes.csv", m_nodePositions.data(), m_res);
 }

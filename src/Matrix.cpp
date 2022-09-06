@@ -114,6 +114,10 @@ std::complex<double> Matrix::getEntryPlasma(int rowIndex, int colIndex){
 
 
     std::complex<double> returnVal{0};
+    //this function "func" computes the integrand of the test function times plasma current
+    // so ic\mu_0/\omega \int dR R \nabla G \cdot \mathbf{J}_p or \mu_0 \int dR R \mathbf{F} \cdot \mathbf{J}_p
+    // the iNode refers to the test function G or F, and J_p computes the plasma response at the quadrature points,
+    // due to the potential at jNode.
     auto func = [iNode, jNode, iComp, jComp, this](double R) {
         if (iComp == 0) {
             return physConstants::mu_0 * R * std::complex<double>{0, 1} * physConstants::speedOfLight / m_omega *

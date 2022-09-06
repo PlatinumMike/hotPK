@@ -50,4 +50,5 @@ void Engine::run() {
 
     matrix_ptr->solve();
     matrix_ptr->saveSolution("sol.csv");
+    mesh_ptr->saveNodes();
 }

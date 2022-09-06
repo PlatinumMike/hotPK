@@ -54,6 +54,8 @@ public:
 
     double getScaling(double R, int elem, int nodeIndex, double angle, int power);
 
+    void saveNodes();
+
 private:
     const int m_res; // number of nodes
     const int m_elem; //number of elements

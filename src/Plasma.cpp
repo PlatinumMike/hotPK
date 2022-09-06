@@ -18,6 +18,11 @@ std::complex<double> Plasma::getCurrentMatrix(double R, int row, int col, int no
     if (m_pType == hot) {
         return getCurrentMatrixHot(R, row, col, nodeIndex);
     }
+    /*if the response is cold or warm, the response is local in space, so we use the 3x3 conductivity.
+    So expressing plasma current J_p in terms of E,and expressing that in terms of \nabla Pot,A.
+    we then take the derivative of the basis function explicitly. For hot plasma it is easier to
+    compute the plasma response for just one, given basis function, so this uses the 3x4 conductivity,
+    and no derivatives.*/
     if (col == 0) {
         std::complex<double> sigmaiR{0};
         std::complex<double> sigmaiphi{0};
@@ -45,7 +50,7 @@ void Plasma::addSpecies(double mass, double charge, double fraction, double omeg
 
 std::complex<double> Plasma::getCurrentMatrixHot(double R, int row, int col, int nodeIndex) {
     std::complex<double> ans{0};
-    constexpr int angularResolution = 11; //needs to be odd for simpson rule. Make input later on.
+    constexpr int angularResolution = 101; //Make input later on.
     double angles[angularResolution];
     std::complex<double> integrand[angularResolution];
     std::vector<int> elemList{};
