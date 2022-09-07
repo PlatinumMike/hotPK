@@ -235,7 +235,7 @@ std::complex<double> Species::getKernel(double R, int row, int col, double s1, d
         }
     }
 
-    return 4.0 * pi * physConstants::eps_0 * omega * getPlasmaFreq2(R) * cyc * cyc / (vT * vT * vT) * ans;
+    return physConstants::eps_0 * omega * getPlasmaFreq2(R) * cyc * cyc / (vT * vT * vT* pi) * ans;
 }
 
 double Species::thermalLarmorRadius(double R) const {
@@ -256,11 +256,11 @@ double Species::getPerpIntegral(double xi1, double xi2, int indexH, int harmonic
 std::complex<double> Species::getSIntegral(double R, int index, int harmonic, double kpar) const{
     double zeta = getZeta(R, harmonic);
     if (index == 0) {
-        return 2 * pi / std::abs(kpar) * plasmaDispersionFunction(zeta);
+        return 1.0 / std::abs(kpar) * plasmaDispersionFunction(zeta);
     } else if (index == 1) {
-        return 2 * pi / kpar * plasmaDispersionFunctionDeriv(zeta);
+        return 1.0 / kpar * plasmaDispersionFunctionDeriv(zeta);
     } else {
-        return 2 * pi / std::abs(kpar) * zeta * plasmaDispersionFunctionDeriv(zeta);
+        return 1.0 / std::abs(kpar) * zeta * plasmaDispersionFunctionDeriv(zeta);
     }
 }
 
