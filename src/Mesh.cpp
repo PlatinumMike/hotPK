@@ -108,31 +108,38 @@ int Mesh::selectSector(double R, int elem) {
 }
 
 double Mesh::getSValue(double R, int elem, double angle, int index) {
+    double sValue;
     double Rleft = getElemLeftPoint(elem);
     double Rright = getElemRightPoint(elem);
+    double cos = std::cos(angle);
+    constexpr double lowerLimit = 1.0e-12;
+    if (std::abs(cos) < lowerLimit) {
+        cos = lowerLimit; //in order to avoid div by 0. if \cos(\alpha) \to 0, s \to \infty, but if it is 10^30, or 10^300 is pretty much irrelevant cause the H functions will have vanished long before that. So justified to have a lower limit.
+    }
     if (index == 0) {
         //s1 (or s3)
         if (R <= Rleft) {
-            return (R - Rleft) / std::cos(angle);
+            sValue = (R - Rleft) / cos;
         } else if (R < Rright) {
-            return 0;
+            sValue = 0;
         } else {
-            return (R - Rright) / std::cos(angle);
+            sValue = (R - Rright) / cos;
         }
     } else {
         //s2 (or s4)
         if (R <= Rleft) {
-            return (R - Rright) / std::cos(angle);
+            sValue = (R - Rright) / cos;
         } else if (R < Rright) {
             if (angle < 0.5 * pi) {
-                return (R - Rleft) / std::cos(angle);
+                sValue = (R - Rleft) / cos;
             } else {
-                return (R - Rright) / std::cos(angle);
+                sValue = (R - Rright) / cos;
             }
         } else {
-            return (R - Rleft) / std::cos(angle);
+            sValue = (R - Rleft) / cos;
         }
     }
+    return std::abs(sValue); //need to take abs() in the edge case where cos is close to 0. This is because then the cos is set to lower limit so the information of its sign is lost. In any case, we know that s>=0, so free to take abs().
 }
 
 bool Mesh::isLeft(int nodeIndex, int elemIndex) {

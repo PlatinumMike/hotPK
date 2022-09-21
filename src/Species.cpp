@@ -44,8 +44,8 @@ Species::Species(double mass, double charge, double fraction, int nTor, double o
     coefDict["R1"] = 1.0;
     coefDict["R2"] = {0, -1};
     coefDict["R3"] = -1.0;
-    coefDict["R4"] = {0, -0.5 * std::sqrt(2) * m_charge / std::abs(m_charge)};
-    coefDict["R5"] = -0.5 * std::sqrt(2) * m_charge / std::abs(m_charge);
+    coefDict["R4"] = {0, -0.5 * std::sqrt(2) * m_chargeSign};
+    coefDict["R5"] = -0.5 * std::sqrt(2) * m_chargeSign;
 
 }
 std::complex<double> Species::getConductivity(double R, int row, int col) const {
@@ -95,7 +95,7 @@ std::complex<double> Species::getConductivity(double R, int row, int col) const 
             }
         }
     } else {
-        return -1; //todo implement hot plasma
+        return -1; //error, type not recognized.
     }
     return -std::complex<double>{0, 1} * omega * physConstants::eps_0 * ans;
 }
@@ -282,9 +282,9 @@ std::complex<double> Species::getCoef(const std::string& label, double R) const 
     if (label == "D3") {
         return -physConstants::speedOfLight / getVThermal(R);
     } else if (label == "D4") {
-        return {0, std::sqrt(2) * m_charge / std::abs(m_charge) * physConstants::speedOfLight / getVThermal(R)};
+        return {0, std::sqrt(2) * m_chargeSign * physConstants::speedOfLight / getVThermal(R)};
     } else if (label == "D5") {
-        return std::sqrt(2) * m_charge / std::abs(m_charge) * physConstants::speedOfLight / getVThermal(R);
+        return std::sqrt(2) * m_chargeSign * physConstants::speedOfLight / getVThermal(R);
     } else {
         return coefDict.at(label);
     }

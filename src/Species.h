@@ -43,6 +43,7 @@ private:
     const double RAxis = 3;
     const double m_mass;
     const double m_charge;
+    const double m_chargeSign;
     const double m_fraction;
     const double peakElectronDensity = 1.0e20;
     const int m_nTor;
