@@ -10,7 +10,7 @@
 constexpr double pi = 3.141592653589793;
 
 Species::Species(double mass, double charge, double fraction, int nTor, double omegaIn, double temp, plasmaType pType) :
-        m_mass(mass), m_charge(charge), m_fraction(fraction), m_nTor(nTor), omega(omegaIn), m_peakTemp(temp), m_pType(pType) {
+        m_mass(mass), m_charge(charge), m_chargeSign(charge/std::abs(charge)), m_fraction(fraction), m_nTor(nTor), omega(omegaIn), m_peakTemp(temp), m_pType(pType) {
     tempOffset = 1.0e2*physConstants::elementaryCharge; //minimal temperature
 
     //setup maps

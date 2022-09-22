@@ -16,10 +16,10 @@ void AuxiliaryFunctions::linspace(double *array, const double start, const doubl
 void AuxiliaryFunctions::getAngle(double *angleArray, int resolution, int sector) {
     constexpr double pi = 3.141592653589793;
     if (sector == 1) {
-        linspace(angleArray, 0.5 * pi, 1.5 * pi, resolution);
+        linspace(angleArray, -pi, 0, resolution);
     } else if (sector == 2) {
-        linspace(angleArray, -0.5 * pi, 1.5 * pi, resolution);
+        linspace(angleArray, -pi, pi, resolution);
     } else {
-        linspace(angleArray, -0.5 * pi, 0.5 * pi, resolution);
+        linspace(angleArray, 0, pi, resolution);
     }
 }
