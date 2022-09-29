@@ -40,7 +40,8 @@ void Matrix::buildMatrix() {
     double startTime = omp_get_wtime();
 #pragma omp parallel
     {
-#pragma omp for collapse(2)
+#pragma omp for collapse(2) schedule(dynamic,1)
+        //bad load balancing, because some row, cols are empty, but others have a lot to deal with. So use dynamic scheduling
         for (int i = 0; i < m_NDOF; ++i) {
             for (int j = 0; j < m_NDOF; ++j) {
                 (*globalMatrix)(i, j) = getEntry(i, j);
