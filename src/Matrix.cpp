@@ -10,9 +10,8 @@
 #include "omp.h"
 #include "ElementIntegrals.h"
 
-Matrix::Matrix(int gridRes, Mesh &mesh, Plasma &plasma, int nTor, double omega) : m_gridRes(gridRes), m_NDOF(4 * gridRes),
-        m_nTor(nTor), m_omega(omega), m_omegaOverC2(omega*omega/(physConstants::speedOfLight*physConstants::speedOfLight)){
-    std::cout<< "Number of degrees of freedom = "<< m_NDOF <<std::endl;
+Matrix::Matrix(int gridRes, Mesh &mesh, Plasma &plasma, int nTor, double omega, double J0R, double J0Phi, double J0Z) : m_gridRes(gridRes), m_NDOF(4 * gridRes),
+        m_nTor(nTor), m_omega(omega), m_omegaOverC2(omega*omega/(physConstants::speedOfLight*physConstants::speedOfLight)), m_J0R(J0R), m_J0Phi(J0Phi), m_J0Z(J0Z){
     globalMatrix = new Eigen::MatrixXcd(m_NDOF,m_NDOF);
     rhs = new Eigen::VectorXcd(m_NDOF);
     solution = new Eigen::VectorXcd(m_NDOF);
@@ -64,25 +63,21 @@ void Matrix::solve() {
 std::complex<double> Matrix::getRhs(int rowIndex) {
     int node = global2Node(rowIndex);
     int comp = global2Comp(rowIndex);
-    //antenna current. Todo: make this an input
-    constexpr double JantR = 0.0;
-    constexpr double JantPhi = 0.0;
-    constexpr double JantZ = 1.0;
     double Rant = m_mesh->getRAnt();
     if (comp == 0) {
         //Potential
         return -std::complex<double>{0, physConstants::mu_0 * physConstants::speedOfLight / m_omega} * (
-                m_mesh->tentDerivative(Rant, node) * JantR -
-                std::complex<double>{0, m_nTor / Rant} * m_mesh->tent(Rant, node) * JantPhi);
+                m_mesh->tentDerivative(Rant, node) * m_J0R -
+                std::complex<double>{0, m_nTor / Rant} * m_mesh->tent(Rant, node) * m_J0Phi);
     } else if (comp == 1) {
         //AR
-        return -physConstants::mu_0 * JantR * m_mesh->tent(Rant, node);
+        return -physConstants::mu_0 * m_J0R * m_mesh->tent(Rant, node);
     } else if (comp == 2) {
         //Aphi
-        return -physConstants::mu_0 * JantPhi * m_mesh->tent(Rant, node);
+        return -physConstants::mu_0 * m_J0Phi * m_mesh->tent(Rant, node);
     } else {
         //AZ
-        return -physConstants::mu_0 * JantZ * m_mesh->tent(Rant, node);
+        return -physConstants::mu_0 * m_J0Z * m_mesh->tent(Rant, node);
     }
 }
 

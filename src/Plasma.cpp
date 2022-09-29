@@ -6,7 +6,8 @@
 #include "physicsConstants.h"
 #include "AuxiliaryFunctions.h"
 
-Plasma::Plasma(Mesh &mesh, int nTor, double omega, plasmaType pType) {
+Plasma::Plasma(Mesh &mesh, int nTor, double omega, int angularResolution, double REast, double RWest,
+               plasmaType pType) : m_angularResolution(angularResolution), m_REast(REast), m_RWest(RWest) {
     m_mesh = &mesh;
     m_NSpecies = 0;
     m_nTor = nTor;
@@ -42,25 +43,26 @@ std::complex<double> Plasma::getCurrentMatrix(double R, int row, int col, int no
     }
 }
 
-void Plasma::addSpecies(double mass, double charge, double fraction, double omega, double peakTemp, plasmaType pType) {
-    Species spec(mass, charge, fraction, m_nTor, omega, peakTemp, pType);
+void Plasma::addSpecies(double mass, double charge, double peakDensity, double minDens, double omega, double peakTemp,
+                        double minTemp, double R0, double B0, plasmaType pType) {
+    Species spec(mass, charge, peakDensity, minDens, m_nTor, omega,
+                 peakTemp, minTemp, R0, m_RWest, m_REast, B0, pType);
     specList.push_back(spec);
     m_NSpecies++;
 }
 
 std::complex<double> Plasma::getCurrentMatrixHot(double R, int row, int col, int nodeIndex) {
     std::complex<double> ans{0};
-    constexpr int angularResolution = 101; //Make input later on.
-    double angles[angularResolution];
-    std::complex<double> integrand[angularResolution];
+    double angles[m_angularResolution];
+    std::complex<double> integrand[m_angularResolution];
     std::vector<int> elemList{};
     m_mesh->getElemList(nodeIndex, elemList);
 
     for (int elem: elemList) {
         //get angle range
         int sector = m_mesh->selectSector(R, elem);
-        AuxiliaryFunctions::getAngle(angles, angularResolution, sector);
-        for (int angle = 0; angle < angularResolution; angle++) {
+        AuxiliaryFunctions::getAngle(angles, m_angularResolution, sector);
+        for (int angle = 0; angle < m_angularResolution; angle++) {
             integrand[angle] = 0; //zero first
             //get s1,s2
             double s1 = m_mesh->getSValue(R, elem, angles[angle], 0);
@@ -73,7 +75,7 @@ std::complex<double> Plasma::getCurrentMatrixHot(double R, int row, int col, int
                 }
             }
         }
-        ans += AuxiliaryFunctions::integrateSimpson(angles, integrand, angularResolution);
+        ans += AuxiliaryFunctions::integrateSimpson(angles, integrand, m_angularResolution);
     }
 
     return ans;

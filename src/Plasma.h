@@ -10,7 +10,7 @@
 
 class Plasma {
 public:
-    Plasma(Mesh &mesh, int nTor, double omega, plasmaType pType);
+    Plasma(Mesh &mesh, int nTor, double omega, int angularResolution, double REast, double RWest, plasmaType pType);
     /**
      * Gets 3x4 matrix that relates current to the 4 potentials.
      * Plasma response due to the basis function with index nodeIndex.
@@ -35,7 +35,8 @@ public:
      */
     std::complex<double> getCurrentMatrixHot(double R, int row, int col, int nodeIndex);
 
-    void addSpecies(double mass, double charge, double fraction, double omega, double peakTemp, plasmaType pType);
+    void addSpecies(double mass, double charge, double peakDensity, double minDens, double omega, double peakTemp,
+                    double minTemp, double R0, double B0, plasmaType pType);
 
 private:
     Mesh *m_mesh;
@@ -43,7 +44,9 @@ private:
     std::vector<Species> specList{};
     int m_nTor;
     double m_omega;
+    const int m_angularResolution;
     plasmaType m_pType;
+    const double m_REast, m_RWest;
 
 
 

@@ -13,7 +13,8 @@ enum plasmaType {vacuum, cold, warm, hot};
 
 class Species {
 public:
-    Species(double mass, double charge, double fraction, int nTor, double omegaIn, double temp, plasmaType pType);
+    Species(double mass, double charge, double peakDensity, double minDens, int nTor, double omegaIn,
+            double peakTemp, double minTemp, double RAxis, double RWest, double REast, double BAxis, plasmaType pType);
 
     /**
      * compute given element of the 3x3 conductivity kernel.
@@ -39,18 +40,20 @@ public:
     std::complex<double> getKernel(double R, int row, int col, double s1, double s2, double angle, int power) const;
 
 private:
-    const double B0Axis = 2.623778994743588; //todo: magic constants, fix
-    const double RAxis = 3;
+    const double B0Axis;
+    const double m_RAxis;
+    const double m_REast;
+    const double m_RWest;
     const double m_mass;
     const double m_charge;
     const double m_chargeSign;
-    const double m_fraction;
-    const double peakElectronDensity = 1.0e20;
+    const double m_peakDensity;
+    const double densOffset;
     const int m_nTor;
     const double omega;
     const plasmaType m_pType;
     const double m_peakTemp;
-    double tempOffset;
+    const double tempOffset; //minimal temperature
 
     //helper maps for looping up indices
     std::map<std::string,int> HDict;
@@ -69,6 +72,7 @@ private:
 
     double getPlasmaFreq2(double R) const;
     double getB0(double R) const;
+    double getProfile(double R, double minValue, double maxValue, double peakingFactor) const;
     double getDensity(double R) const;
     double getCyclotronFreq(double R) const;
     double getTemperature(double R) const;

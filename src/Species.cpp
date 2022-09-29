@@ -9,9 +9,11 @@
 
 constexpr double pi = 3.141592653589793;
 
-Species::Species(double mass, double charge, double fraction, int nTor, double omegaIn, double temp, plasmaType pType) :
-        m_mass(mass), m_charge(charge), m_chargeSign(charge/std::abs(charge)), m_fraction(fraction), m_nTor(nTor), omega(omegaIn), m_peakTemp(temp), m_pType(pType) {
-    tempOffset = 1.0e2*physConstants::elementaryCharge; //minimal temperature
+Species::Species(double mass, double charge, double peakDensity, double minDens, int nTor, double omegaIn,
+                 double peakTemp, double minTemp, double RAxis, double RWest, double REast, double BAxis, plasmaType pType) :
+        m_mass(mass), m_charge(charge), m_chargeSign(charge/std::abs(charge)),
+        m_peakDensity(peakDensity), densOffset(minDens), m_nTor(nTor), omega(omegaIn), m_peakTemp(peakTemp), m_pType(pType),
+        B0Axis(BAxis), m_RAxis(RAxis), m_RWest(RWest), m_REast(REast), tempOffset(minTemp){
 
     //setup maps
     //HDict takes in a label, and returns the required H function for that kernel element
@@ -120,11 +122,11 @@ double Species::getPlasmaFreq2(double R) const{
 }
 
 double Species::getB0(double R) const{
-    return B0Axis * RAxis / R;
+    return B0Axis * m_RAxis / R;
 }
 
 double Species::getDensity(double R) const{
-    return std::max(m_fraction * peakElectronDensity * (1.0 - 3.0 * (R - RAxis) * (R - RAxis)), 0.0);
+    return getProfile(R,densOffset, m_peakDensity, 1.0);
 }
 
 double Species::getCyclotronFreq(double R) const{
@@ -154,7 +156,7 @@ std::complex<double> Species::getPWarm(double R) const {
 }
 
 double Species::getTemperature(double R) const {
-    return std::max(m_peakTemp * (1.0 - 3.0 * (R - RAxis) * (R - RAxis)), tempOffset);
+    return getProfile(R, tempOffset, m_peakTemp, 1.5);
 }
 
 double Species::getVThermal(double R) const {
@@ -288,4 +290,10 @@ std::complex<double> Species::getCoef(const std::string& label, double R) const 
     } else {
         return coefDict.at(label);
     }
+}
+
+double Species::getProfile(double R, double minValue, double maxValue, double peakingFactor) const {
+    double minorRadius = (R < m_RAxis) ? m_RAxis - m_RWest : m_REast - m_RAxis; //not necessarily symmetry
+    double x = (R - m_RAxis) / minorRadius;
+    return minValue + (maxValue - minValue) * std::pow(1.0 - x * x, peakingFactor);
 }

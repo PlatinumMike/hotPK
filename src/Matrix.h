@@ -16,7 +16,18 @@ typedef Eigen::Triplet<std::complex<double>> T;
 
 class Matrix {
 public:
-    Matrix(int gridRes, Mesh &mesh, Plasma &plasma, int nTor, double omega);
+    /**
+     * Matrix constructor
+     * @param gridRes grid resolution
+     * @param mesh mesh object
+     * @param plasma plasma object
+     * @param nTor toroidal mode number
+     * @param omega angular antenna frequency
+     * @param J0R antenna current amplitude in R direction
+     * @param J0Phi same, but in toroidal direction
+     * @param J0Z same, but in Z direction
+     */
+    Matrix(int gridRes, Mesh &mesh, Plasma &plasma, int nTor, double omega, double J0R, double J0Phi, double J0Z);
 
     /**
      * Element extraction routine.
@@ -53,6 +64,7 @@ private:
     const double m_omega;
     const double m_omegaOverC2;
     const int m_nTor;
+    const double m_J0R, m_J0Phi, m_J0Z; //antenna currents
 
     Eigen::MatrixXcd *globalMatrix;
     Eigen::SparseMatrix<std::complex<double>> *sparseMatrix;

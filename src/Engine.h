@@ -8,16 +8,20 @@
 #include "Matrix.h"
 #include "Mesh.h"
 #include "Plasma.h"
+#include "Parameters.h"
+#include <string>
 
 class Engine {
 public:
-    Engine();
+    explicit Engine(const std::string &fileName);
     void run();
 
 private:
     Mesh *mesh_ptr;
     Plasma *plasma_ptr;
     Matrix *matrix_ptr;
+    Parameters inputs;
+    int readInput(const std::string &inputFileName);
 
 };
 
