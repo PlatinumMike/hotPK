@@ -13,7 +13,14 @@
 
 class Engine {
 public:
+    /**
+     * Initialize Engine object, and read input data
+     * @param fileName name of the JSON inputs
+     */
     explicit Engine(const std::string &fileName);
+    /**
+     * Run the actual simulation
+     */
     void run();
 
 private:
@@ -21,6 +28,11 @@ private:
     Plasma *plasma_ptr;
     Matrix *matrix_ptr;
     Parameters inputs;
+    /**
+     * Read JSON input file
+     * @param inputFileName file name
+     * @return status
+     */
     int readInput(const std::string &inputFileName);
 
 };

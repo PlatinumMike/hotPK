@@ -35,6 +35,19 @@ public:
      */
     std::complex<double> getCurrentMatrixHot(double R, int row, int col, int nodeIndex);
 
+    /**
+     * Add a species to the plasma mix
+     * @param mass particle mass
+     * @param charge particle charge
+     * @param peakDensity maximal density of said species
+     * @param minDens minimal density
+     * @param omega angular frequency antenna
+     * @param peakTemp maximal temperature (J)
+     * @param minTemp minimal temperature (J)
+     * @param R0 major radius of the axis
+     * @param B0 magnetic field strength on axis (we only use a toroidal field here)
+     * @param pType plasma type, cold, warm or hot
+     */
     void addSpecies(double mass, double charge, double peakDensity, double minDens, double omega, double peakTemp,
                     double minTemp, double R0, double B0, plasmaType pType);
 

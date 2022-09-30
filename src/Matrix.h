@@ -40,6 +40,11 @@ public:
      */
     std::complex<double> getEntry(int rowIndex, int colIndex);
 
+    /**
+     * Get an entry from the RHS vector
+     * @param rowIndex index to retrieve
+     * @return RHS entry
+     */
     std::complex<double> getRhs(int rowIndex);
 
     /**
@@ -51,10 +56,22 @@ public:
      */
     void buildMatrix();
 
+    /**
+     * Solve matrix system using Eigen's dense matrix routines (partial pivoting LU).
+     */
     void solve();
 
+    /**
+     * Export matrix in csv format (only Re or Im part)
+     * @param fileName desired filename
+     * @param isReal choose to write real part, or imaginary part
+     */
     void saveMatrix(const std::string& fileName, bool isReal);
 
+    /**
+     * Write solution to disk
+     * @param fileName desired file name
+     */
     void saveSolution(const std::string& fileName);
 
 
@@ -97,6 +114,12 @@ private:
      */
     int local2Global(int elemIndex, int localNodeIndex, int component);
 
+    /**
+     * Get the contribution of the plasma to the matrix
+     * @param rowIndex row index
+     * @param colIndex column index
+     * @return single matrix entry, plasma contribution only
+     */
     std::complex<double> getEntryPlasma(int rowIndex, int colIndex);
 
     /**
@@ -108,7 +131,14 @@ private:
      */
     std::complex<double> getEntryVacuum(int rowIndex, int colIndex);
 
+    /**
+     * Construct right hand side vector
+     */
     void buildRHS();
+
+    /**
+     * Build sparse matrix, which holds the contribution of the "Laplacian-like" operator.
+     */
     void buildSparse();
 
     /**

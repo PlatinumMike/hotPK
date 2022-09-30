@@ -9,6 +9,11 @@
 
 class ElementIntegrals {
 public:
+    /**
+     * Compute basic integrals over the basis functions, needed for the Galerkin form.
+     * @param Rmid element middle position
+     * @param elemWidth element width
+     */
     ElementIntegrals(double Rmid, double elemWidth);
     //assemble local matrices, subscripts 'm' for minus, 'p' for plus.
     //todo: There is some precision loss due to cancellation issues (related to moment1m1 only), so recast this moment into a different form.

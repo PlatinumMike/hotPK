@@ -42,7 +42,7 @@ readCSVcomplex(runDir+"sol.csv", solutionVectorA)
 
 #reshaping
 speedOfLight = 299792458.0
-omega = 40e6*2*np.pi #todo: get from inputs
+omega = 51e6*2*np.pi #todo: get from inputs
 pot = speedOfLight*solutionVectorA[:NR] #divided by c for better matrix conditioning, now retrieve potential so multiply times c.
 AR = solutionVectorA[NR:2*NR]
 Avarphi = solutionVectorA[2*NR:3*NR]
@@ -53,9 +53,16 @@ EZ = 1.0j*omega*AZ
 
 #plotting
 plt.figure()
-plt.plot(nodePositionR,np.real(EZ),label='real part')
-plt.plot(nodePositionR,np.imag(EZ),label='imaginary part')
+plt.plot(nodePositionR,np.real(pot)/speedOfLight,label='real part')
+plt.plot(nodePositionR,np.imag(pot)/speedOfLight,label='imaginary part')
 plt.xlabel("R(m)")
-plt.ylabel("EZ")
+plt.ylabel(r"$\Phi$ (Vs/m)")
+plt.legend()
+
+plt.figure()
+plt.plot(nodePositionR,np.real(AZ),label='real part')
+plt.plot(nodePositionR,np.imag(AZ),label='imaginary part')
+plt.xlabel("R(m)")
+plt.ylabel(r"$A_Z$ (Vs/m)")
 plt.legend()
 plt.show()

@@ -9,8 +9,21 @@
 
 class AuxiliaryFunctions {
 public:
+    /**
+     * Fill array with linearly spaced values
+     * @param array target array
+     * @param start starting value
+     * @param stop final value
+     * @param count number of entries to fill
+     */
     static void linspace(double *array, double start, double stop, int count);
 
+    /**
+     * FIll array of polar angles needed for the integration
+     * @param angleArray target array
+     * @param resolution number of entries
+     * @param sector select angular range, based on where we are w.r.t. the tent function (left, middle or right).
+     */
     static void getAngle(double *angleArray, int resolution, int sector);
 
     /**
