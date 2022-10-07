@@ -34,7 +34,7 @@ Optionally, you can generate a documentation file with doxygen by running `doxyg
 Then open html/index.html to read it. To generate the pdf version, navigate to `latex/` and use `make`, this requires `pdflatex`.
 
 # License
-HierarchicalRF  Copyright (C) 2022  Mike Machielsen\
+HotPK Copyright (C) 2022  Mike Machielsen\
 This program comes with ABSOLUTELY NO WARRANTY.\
 This is free software, and you are welcome to redistribute it\
 under certain conditions; see license for details.
