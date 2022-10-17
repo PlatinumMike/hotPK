@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import Hfunctions as hf
 
 def plotH(index,jacobian=False):
-    names = ["H0","H0mod", "H1", "H2", "H3", "H4", "H5"]
+    names = [r"$H_0$",r"$\breve{H}_0$", r"$H_1$", r"$H_2$", r"$H_3$", r"$H_4$", r"$H_5$"]
     plt.figure()
     for harmonic in range(4):
         plt.plot(perpDistanceNormalized,HValues[index,harmonic,:],label=names[index]+', n='+str(harmonic),linewidth=3)
@@ -34,3 +34,4 @@ for index in range(7):
         HValues[index,harmonic,:] = hf.getH(perpDistanceNormalized,index,harmonic,jacobian)
 
 plotH(1,jacobian)
+plt.tight_layout()

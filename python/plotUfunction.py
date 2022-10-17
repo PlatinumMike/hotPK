@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import Hfunctions as hf
 
 def plotU(index):
-    names = ["U0","U0mod", "U1", "U2", "U3", "U4", "U5"]
+    names = [r"$U_0$",r"$\breve{U}_0$", r"$U_1$", r"$U_2$", r"$U_3$", r"$U_4$", r"$U_5$"]
     plt.figure()
     for harmonic in range(4):
         plt.plot(perpDistanceNormalized,UValues[index,harmonic,:],label=names[index]+', n='+str(harmonic),linewidth=3)
