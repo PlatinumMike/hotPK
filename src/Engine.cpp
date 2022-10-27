@@ -9,7 +9,7 @@
 #include "omp.h"
 #include "boost/property_tree/json_parser.hpp"
 #include "boost/property_tree/ptree.hpp"
-//#include <filesystem> //not supported on my system
+#include <filesystem>
 
 #ifndef GIT_COMMIT_HASH
 #define GIT_COMMIT_HASH "?"
@@ -69,6 +69,7 @@ void Engine::run() {
     matrix_ptr = new Matrix(constInputs.gridResolution, *mesh_ptr, *plasma_ptr, constInputs.nToroidal,
                             constInputs.omega, constInputs.J0R, constInputs.J0Phi, constInputs.J0Z);
 
+    matrix_ptr->saveRHS("rhs.csv");
 
     matrix_ptr->buildMatrix();
 
@@ -90,7 +91,7 @@ void Engine::run() {
 
 int Engine::readInput(const std::string &inputFileName) {
     std::cout << "Reading input from file " << inputFileName << std::endl;
-    if (true) { //std::filesystem::exists(inputFileName)) {
+    if (std::filesystem::exists(inputFileName)) {
         boost::property_tree::ptree root;
         boost::property_tree::read_json(inputFileName, root);
 

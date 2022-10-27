@@ -284,3 +284,7 @@ int Matrix::local2Global(int elemIndex, int localNodeIndex, int component) {
 void Matrix::saveSolution(const std::string& fileName) {
     Writers::writeCsv(fileName, *solution);
 }
+
+void Matrix::saveRHS(const std::string &fileName) {
+    Writers::writeCsv(fileName, *rhs);
+}

@@ -9,7 +9,7 @@ You need a C++ compiler, `cmake`, `make` and the Boost (version>=1.70 because of
 You need to define an environment variable `BOOST_INCLUDE_DIR` equal to the path in which you extracted the Boost.
 Similarly, for cmake to be able to find Eigen, define `EIGEN3_INCLUDE_DIR` to be equal to the path in which eigen is installed.
 E.g. `export EIGEN3_INCLUDE_DIR=$HOME/Downloads/eigen/`. You also need OpenMP, but most compilers these days come with this included.
-Lastly, you also need the GNU scientific library.
+Lastly, you also need the GNU scientific library. Hint: on Ubuntu Boost/GSL can be installed using `apt` under the names `libboost-all-dev`, and `libgsl-dev`.
 
 Then compile:
 

@@ -74,6 +74,12 @@ public:
      */
     void saveSolution(const std::string& fileName);
 
+    /**
+     * Write rhs to disk
+     * @param fileName desired file name
+     */
+    void saveRHS(const std::string& fileName);
+
 
 private:
     const int m_gridRes;
