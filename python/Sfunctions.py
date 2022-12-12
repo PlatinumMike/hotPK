@@ -7,7 +7,7 @@ needs the arbitrary precision at large arguments.
 
 import mpmath as mp
 
-mp.mp.dps=100 #set precision
+mp.mp.dps=150 #set precision
 
 def getS1(eps,x):
     return 0.5j*mp.meijerg([[],[]],[[0,0],[1/2]],x*x) + eps*0.5*(4*abs(x)*mp.hyper([],[3/2,3/2],x*x)-mp.sqrt(mp.pi)*mp.hyper([],[1/2,1],x*x))
