@@ -8,7 +8,7 @@ import plasmapy.dispersion as dp
 from scipy import special as sp
 import numpy as np
 
-def getKernel(kx, ky, kz, nMax=3, signCyc=1, vToverC=1.0e-3, freqRatio=0.9):
+def getKernel(kx, ky, kz, nMin=-3, nMax=3, signCyc=1, vToverC=1.0e-3, freqRatio=0.9):
     """
 
     Parameters
@@ -58,7 +58,7 @@ def getKernel(kx, ky, kz, nMax=3, signCyc=1, vToverC=1.0e-3, freqRatio=0.9):
     K3 = 0.0j
     K4 = 0.0j
     K5 = 0.0j
-    for n in range(-nMax,nMax+1):
+    for n in range(nMin,nMax+1):
         zeta = 2*signCyc*(freqRatio-n)/kzAbs
         PDF = dp.plasma_dispersion_func(zeta)
         dPDF = dp.plasma_dispersion_func_deriv(zeta)
