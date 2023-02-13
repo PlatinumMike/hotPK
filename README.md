@@ -32,6 +32,7 @@ You can control the number of threads by setting the environment variable `OMP_N
 
 Optionally, you can generate a documentation file with doxygen by running `doxygen` in the root dir (i.e. where the Doxyfile is located).
 Then open html/index.html to read it. To generate the pdf version, navigate to `latex/` and use `make`, this requires `pdflatex`.
+For more information on the physics of the code, see the paper by Machielsen, Rubin, Graves, "Exact expression for the hot plasma conductivity kernel in configuration space", [2023](https://doi.org/10.1016/j.fpp.2023.100008).
 
 # License
 HotPK Copyright (C) 2022  Mike Machielsen\
