@@ -126,7 +126,7 @@ def manualFT(function, z , kz):
     complex
         F(kz) = FT(f)
     """
-    return integrate.simpson(function*np.exp(-1.0j*z*kz),x=z)
+    return integrate.simpson(y=function * np.exp(-1.0j * z * kz), x=z)
 
 def manualFT2(f, rRange, angles, kx, ky):
     """
@@ -152,8 +152,9 @@ def manualFT2(f, rRange, angles, kx, ky):
 
     kperp = np.sqrt(kx**2 + ky**2)
     psi = np.arctan2(ky, kx)
-    integrand = f*np.exp(-1.0j*kperp*rRange[:, None]*np.cos(angles[None, :]-psi))
-    return integrate.simpson(integrate.simpson(integrand, angles, axis=-1), rRange) #integrate over angle, then integrate over radial position.
+    integrand = f * np.exp(-1.0j * kperp * rRange[:, None] * np.cos(angles[None, :] - psi))
+    # integrate over angle, then integrate over radial position.
+    return integrate.simpson(y=integrate.simpson(y=integrand, x=angles, axis=-1), x=rRange)
 
 def plotResultZ(row, col):
     plt.figure()
