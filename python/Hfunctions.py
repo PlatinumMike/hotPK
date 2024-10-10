@@ -174,7 +174,7 @@ c4U = np.array(
 )
 
 
-def getH(x, index, n, jacobian=False):
+def getH(x: float, index: int, n: int, jacobian: bool = False):
     """
     Parameters
     ----------
@@ -208,7 +208,7 @@ def getH(x, index, n, jacobian=False):
     return signFlip * (x**a0local * poly1 * np.exp(-x * x) + x**a1local * poly2 * special.erfc(x))
 
 
-def getU(x, index, n):
+def getU(x: float, index: int, n: int):
     """
     U = \\int dx x H(x)
 
@@ -244,7 +244,7 @@ def getU(x, index, n):
     return signFlip * (x**a0local * poly1 * np.exp(-x * x) + x**a1local * poly2 * special.erfc(x))
 
 
-def getV(x, index, n):
+def getV(x: float, index: int, n: int):
     """
     V = \\int dx x^2 H(x)
 

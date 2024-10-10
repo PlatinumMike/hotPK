@@ -14,7 +14,7 @@ import time
 import matplotlib.pyplot as plt
 
 
-def castToNumpy(mpArray, dim):
+def castToNumpy(mpArray, dim: int):
     if dim == 1:
         return np.array(mpArray.tolist(), dtype="complex128")[0, :]
     else:
@@ -22,18 +22,18 @@ def castToNumpy(mpArray, dim):
 
 
 def getPoints(
-    resolutionX=100,
-    resolutionY=100,
-    resolutionZ=300,
-    xMax=3,
-    yMax=3,
-    zMax=30,
-    nMax=3,
-    signCyc=1,
-    vTOverC=1.0e-3,
-    freqRatio=0.9,
-    dataLayout="normal",
-    plotResults=False,
+    resolutionX: int = 100,
+    resolutionY: int = 100,
+    resolutionZ: int = 300,
+    xMax: float = 3.0,
+    yMax: float = 3.0,
+    zMax: float = 30.0,
+    nMax: int = 3,
+    signCyc: int = 1,
+    vTOverC: float = 1.0e-3,
+    freqRatio: float = 0.9,
+    dataLayout: str = "normal",
+    plotResults: bool = False,
 ):
     """
 
@@ -41,9 +41,9 @@ def getPoints(
     ----------
     resolutionX : int, optional
         mesh resolution in x direction. All of these resolutions must be even, because there is a singularity at the origin.
-    resolutionY : TYPE, optional
+    resolutionY : int, optional
         mesh resolution in y direction
-    resolutionZ : TYPE, optional
+    resolutionZ : int, optional
         mesh resolution in z direction
     xMax : double, optional
         max of the range, already in normalized units: all distances divided by (2*thermal Larmor radius)

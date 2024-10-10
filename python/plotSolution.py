@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import csv
 
 
-def readCSV(fileName, data):
+def readCSV(fileName: str, data):
     with open(fileName) as csvfile:
         reader = csv.reader(csvfile, delimiter=",")
         i = 0
@@ -18,7 +18,7 @@ def readCSV(fileName, data):
             i += 1
 
 
-def readCSVcomplex(fileName, data):
+def readCSVcomplex(fileName: str, data):
     with open(fileName) as csvfile:
         reader = csv.reader(csvfile, delimiter=",")
         i = 0

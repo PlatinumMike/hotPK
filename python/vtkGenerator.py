@@ -9,7 +9,7 @@ import numpy as np
 from pyevtk.hl import gridToVTK
 
 
-def saveData(fileName, x, y, z, kernel):
+def saveData(fileName: str, x, y, z, kernel):
     print("saving vtk data now")
     # data needs to be a double, and contiguous, so storing it in two new arrays.
     kernReal = np.empty(kernel.shape, dtype="float64")

@@ -16,7 +16,7 @@ def castToNumpy(mpArray):
     return np.array(mpArray.tolist(), dtype="complex128")[0, :]
 
 
-def cutZero(arr):
+def cutZero(arr: np.ndarray):
     length = arr.size
     if length % 2 == 1 and length > 2:
         # odd count, so assuming 0 is in the middle

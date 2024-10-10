@@ -35,14 +35,14 @@ import time
 plt.rcParams.update({"font.size": 14})
 
 
-def castToNumpy(mpArray, dim):
+def castToNumpy(mpArray, dim: int):
     if dim == 1:
         return np.array(mpArray.tolist(), dtype="complex128")[0, :]
     else:
         return np.array(mpArray.tolist(), dtype="complex128")
 
 
-def getS(z, harmonic, freqRatio, version):
+def getS(z: np.ndarray, harmonic: int, freqRatio: float, version: int):
     S = mp.matrix(1, z.size)
     for iz in range(z.size):
         eps = np.sign(freqRatio - harmonic) * signCyc
@@ -57,7 +57,7 @@ def getS(z, harmonic, freqRatio, version):
     return Snumpy
 
 
-def getKernel(HValues, angle):
+def getKernel(HValues: np.ndarray, angle: float):
     sine = np.sin(angle)
     cosine = np.cos(angle)
     sine2 = np.sin(2 * angle)
@@ -135,7 +135,7 @@ def manualFT(function, z, kz):
     return integrate.simpson(y=function * np.exp(-1.0j * z * kz), x=z)
 
 
-def manualFT2(f, rRange, angles, kx, ky):
+def manualFT2(f, rRange, angles, kx: float, ky: float):
     """
 
     Parameters
@@ -164,7 +164,7 @@ def manualFT2(f, rRange, angles, kx, ky):
     return integrate.simpson(y=integrate.simpson(y=integrand, x=angles, axis=-1), x=rRange)
 
 
-def plotResultZ(row, col):
+def plotResultZ(row: int, col: int):
     plt.figure()
     plt.plot(kz, kernel[row, col, :].real, c="k", label="ref, Re")
     plt.plot(kz, kernel[row, col, :].imag, c="b", label="ref, Im")
@@ -176,7 +176,7 @@ def plotResultZ(row, col):
     plt.tight_layout()
 
 
-def plotResultX(row, col):
+def plotResultX(row: int, col: int):
     plt.figure()
     plt.plot(kx2, kernel2[row, col, :].real, c="k", label="ref, Re")
     plt.plot(kx2, kernel2[row, col, :].imag, c="b", label="ref, Im")

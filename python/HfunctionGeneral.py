@@ -11,7 +11,7 @@ mp.mp.dps = 100  # set precision, probably overkill for the H functions.
 
 
 # helper functions, used to define the actual H functions, see paper Machielsen
-def helper1(x, n):
+def helper1(x: float, n: int):
     if n == 0:
         return 0  # edge case, value irrelevant because it will be multiplied by 0 anyway.
     else:
@@ -21,42 +21,42 @@ def helper1(x, n):
         ) / mp.sqrt(mp.pi)
 
 
-def helper2(x, n):
+def helper2(x: float, n: int):
     n = abs(n)
     return mp.hyp2f2(1 / 2 - n, 1 / 2 + n, 1 / 2, 3 / 2, -x * x) / mp.sqrt(2 * mp.pi) - 1 / 2 * mp.sqrt(
         2
     ) * n * x * mp.hyp2f2(1 - n, 1 + n, 3 / 2, 2, -x * x)
 
 
-def helper3(x, n):
+def helper3(x: float, n: int):
     n = abs(n)
     return mp.hyp2f2(1 / 2 - n, 1 / 2 + n, 1 / 2, 1 / 2, -x * x) / (
         4 * mp.sqrt(mp.pi) * x
     ) - 1 / 2 * n * mp.hyp2f2(1 - n, 1 + n, 1, 3 / 2, -x * x)
 
 
-def helper4(x, n):
+def helper4(x: float, n: int):
     n = abs(n)
     return n * (n * n - 1) * x / (3 * mp.sqrt(2)) * mp.hyp2f2(2 - n, 2 + n, 2, 5 / 2, -x * x) + mp.hyp2f2(
         1 / 2 - n, 1 / 2 + n, -1 / 2, 1 / 2, -x * x
     ) / (8 * mp.sqrt(2 * mp.pi) * x * x)
 
 
-def helper5(x, n):
+def helper5(x: float, n: int):
     n = abs(n)
     return n * (n * n - 1) / 6 * mp.hyp2f2(2 - n, 2 + n, 1, 5 / 2, -x * x) - mp.hyp2f2(
         1 / 2 - n, 1 / 2 + n, -1 / 2, -1 / 2, -x * x
     ) / (32 * mp.sqrt(mp.pi) * x * x * x)
 
 
-def helper6(x, n):
+def helper6(x: float, n: int):
     n = abs(n)
     return 3 / (32 * mp.sqrt(mp.pi) * x * x * x) * mp.hyp2f2(
         1 / 2 - n, 1 / 2 + n, -3 / 2, 1 / 2, -x * x
     ) - n * (4 - 5 * n * n + n**4) / 30 * x * x * mp.hyp2f2(3 - n, 3 + n, 3, 7 / 2, -x * x)
 
 
-def getH(x, index, n, jacobian=False):
+def getH(x: float, index: int, n: int, jacobian: bool = False):
     """
     Parameters
     ----------

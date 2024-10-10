@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import Hfunctions as hf
 
 
-def plotH(index, jacobian=False):
+def plotH(index: int, jacobian: bool = False):
     names = [r"$H_0$", r"$\breve{H}_0$", r"$H_1$", r"$H_2$", r"$H_3$", r"$H_4$", r"$H_5$"]
     plt.figure()
     for harmonic in range(4):

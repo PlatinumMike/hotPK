@@ -9,7 +9,16 @@ from scipy import special as sp
 import numpy as np
 
 
-def getKernel(kx, ky, kz, nMin=-3, nMax=3, signCyc=1, vToverC=1.0e-3, freqRatio=0.9):
+def getKernel(
+    kx: float,
+    ky: float,
+    kz: float,
+    nMin: int = -3,
+    nMax: int = 3,
+    signCyc: int = 1,
+    vToverC: float = 1.0e-3,
+    freqRatio: float = 0.9,
+) -> np.ndarray:
     """
 
     Parameters
